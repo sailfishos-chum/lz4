@@ -19,6 +19,19 @@ PackageName: LZ4
 Categories:
   - Library
 
+%package        libs
+Summary:        Libaries for lz4
+
+%description    libs
+This package contains the libaries for lz4.
+
+%package        static
+Summary:        Static library for lz4
+
+%description    static
+LZ4 is an extremely fast loss-less compression algorithm. This package
+contains static libraries for static linking of applications.
+
 %package devel
 Summary: lz4 development headers and static library
 Group: Development/Libraries
@@ -31,20 +44,6 @@ package provides libraries and headers for development
 PackageName: LZ4 Development
 Categories:
   - Library
-
-%package tools
-Summary: lz4 tools
-Group: Development/Libraries
-Requires: %{name} = %{version}
-
-%description tools
-LZ4 is lossless compression algorithm. This
-package provides tools
-
-PackageName: LZ4 Tools
-Type: console-application
-Categories:
-  - Utility
 
 %prep
 %setup -q -n %{name}-%{version}/lz4
@@ -71,24 +70,27 @@ CXXFLAGS="$CXXFLAGS -fPIC"
 %postun -n lz4 -p /sbin/ldconfig
 
 %files
-%defattr(-, root, root, 0755)
-# %exclude %{_defaultdocdir}/snappy
-%{_libdir}/liblz4.so.*
-%exclude %{_mandir}/man1/*lz4*
-
-%files devel
-%defattr(-, root, root, 0755)
-%{_includedir}/lz4*.h
-%{_libdir}/liblz4.a
-%{_libdir}/liblz4.so
-%{_libdir}/pkgconfig/liblz4.pc
-# %exclude %{_libdir}/libsnappy.la
-
-%files tools
-%defattr(-, root, root, 0755)
-%{_bindir}/lz4*
+%license programs/COPYING
+%{_bindir}/lz4
+%{_bindir}/lz4c
+%{_bindir}/lz4cat
 %{_bindir}/unlz4
 
+%files libs
+%doc lib/LICENSE
+%{_libdir}/liblz4.so.*
+
+%files devel
+%{_includedir}/lz4*.h
+%{_libdir}/liblz4.so
+%{_libdir}/pkgconfig/liblz4.pc
+
+%files static
+%doc lib/LICENSE
+%{_libdir}/liblz4.a
+
 %changelog
+* Sat May  9 2026 nephros <sailfish@nephros.org>  - 1.8.1.3
+- retire package from Chum (as Sailfish OS 5.1 ships it)
 * Thu Mar 29 2018 rinigus <rinigus.git@gmail.com> - 1.8.1.2
 - initial packaging release for SFOS
