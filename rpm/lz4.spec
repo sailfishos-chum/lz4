@@ -12,6 +12,11 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: gcc-c++
 #Requires: pango
 
+# just for good measure: retire for SFOS versions >= 5.1
+%if 0%{?sailfishos_version} >= 50100
+ExclusiveArch: none
+%endif
+
 %description
 LZ4 is lossless compression algorithm
 
