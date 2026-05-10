@@ -7,7 +7,6 @@ Group: Libraries/Databases
 URL: https://github.com/lz4/lz4
 
 Source: %{name}-%{version}.tar.gz
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 BuildRequires: gcc-c++
 #Requires: pango
@@ -17,10 +16,13 @@ BuildRequires: gcc-c++
 ExclusiveArch: none
 %endif
 
+Obsoletes: lz4-tools < %{version}
+Provides: lz4-tools
+
 %description
 LZ4 is lossless compression algorithm
 
-PackageName: LZ4
+Title: LZ4
 Categories:
   - Library
 
@@ -30,25 +32,25 @@ Summary:        Libaries for lz4
 %description    libs
 This package contains the libaries for lz4.
 
+%package devel
+Summary: lz4 development headers and static library
+Group: Development/Libraries
+Requires: %{name}-libs = %{version}-%{release}
+
+%description devel
+LZ4 is lossless compression algorithm. This
+package provides libraries and headers for development
+
+Title: LZ4 Development
+Categories:
+  - Library
+
 %package        static
 Summary:        Static library for lz4
 
 %description    static
 LZ4 is an extremely fast loss-less compression algorithm. This package
 contains static libraries for static linking of applications.
-
-%package devel
-Summary: lz4 development headers and static library
-Group: Development/Libraries
-Requires: %{name} = %{version}
-
-%description devel
-LZ4 is lossless compression algorithm. This
-package provides libraries and headers for development
-
-PackageName: LZ4 Development
-Categories:
-  - Library
 
 %prep
 %setup -q -n %{name}-%{version}/lz4
@@ -62,18 +64,12 @@ CXXFLAGS="$CXXFLAGS -fPIC"
 %{__make} prefix=/usr %{?_smp_mflags}
 
 %install
-%{__rm} -rf %{buildroot}
 %{__make} install prefix=%{_prefix} LIBDIR=%{_libdir} DESTDIR=%{buildroot}
 %{__rm} -rf %{buildroot}/%{_mandir}
 
-%clean
-%{__rm} -rf %{buildroot}
+%post libs -p /sbin/ldconfig
 
-%pre
-
-%post -n lz4 -p /sbin/ldconfig
-
-%postun -n lz4 -p /sbin/ldconfig
+%postun libs -p /sbin/ldconfig
 
 %files
 %license programs/COPYING
