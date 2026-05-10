@@ -16,8 +16,8 @@ BuildRequires: gcc-c++
 ExclusiveArch: none
 %endif
 
-Obsoletes: lz4-tools < %{version}
-Provides: lz4-tools
+Obsoletes: lz4-tools <= %{version}
+Provides:  lz4-tools = %{version}
 
 %description
 LZ4 is lossless compression algorithm
